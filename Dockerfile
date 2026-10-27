@@ -71,10 +71,9 @@ RUN cd nanos6-version-${NANOS6_VERSION} \
     && cd /home && rm -rf nanos6-version-${NANOS6_VERSION}
 
 # --- Benchmark sources ----------------------------------------------------
-# Expects a test/ folder next to this Dockerfile (jacobi_ompss.cpp, lu_ompss.cpp, ...).
 # Compile inside the container on the target machine, since -march=native is CPU-specific:
 #   clang++ -O3 -march=native -ffast-math -fompss-2 jacobi_ompss.cpp -lnuma -o jacobi_ompss
-COPY test/ /root/test/
+COPY src/ /root/test/
 
 WORKDIR /root
 CMD ["/bin/bash"]
