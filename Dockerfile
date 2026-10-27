@@ -7,6 +7,8 @@
 
 FROM --platform=linux/amd64 debian:stable-slim
 
+LABEL org.opencontainers.image.source=https://github.com/ashleylst/ompss-env
+
 # Parallel compile jobs. LLVM needs ~2 GB RAM per job; keep this low on small machines.
 ARG JOBS=4
 ARG NANOS6_VERSION=4.3.1
@@ -14,8 +16,9 @@ ARG LLVM_RELEASE=github-release-2026.06
 # Pin ovni to a tag or commit for reproducible builds (e.g. --build-arg OVNI_REF=<tag>).
 ARG OVNI_REF=master
 
-ENV OVNI_HOME=/root/installation/ovni \
-    INSTALLATION_PREFIX=/root/installation/ompss-2
+# Installed under /opt (not /root) so non-root users can read it, e.g. under Apptainer on HPC.
+ENV OVNI_HOME=/opt/ompss/ovni \
+    INSTALLATION_PREFIX=/opt/ompss/ompss-2
 ENV PATH=$INSTALLATION_PREFIX/bin:$OVNI_HOME/bin:$PATH \
     LD_LIBRARY_PATH=$INSTALLATION_PREFIX/lib:$OVNI_HOME/lib
 
@@ -71,9 +74,11 @@ RUN cd nanos6-version-${NANOS6_VERSION} \
     && cd /home && rm -rf nanos6-version-${NANOS6_VERSION}
 
 # --- Benchmark sources ----------------------------------------------------
+# Expects a test/ folder next to this Dockerfile (jacobi_ompss.cpp, lu_ompss.cpp, ...).
 # Compile inside the container on the target machine, since -march=native is CPU-specific:
 #   clang++ -O3 -march=native -ffast-math -fompss-2 jacobi_ompss.cpp -lnuma -o jacobi_ompss
-COPY src/ /root/test/
+COPY src/ /opt/ompss/test/
+RUN chmod -R a+rX /opt/ompss
 
-WORKDIR /root
+WORKDIR /opt/ompss/test
 CMD ["/bin/bash"]
