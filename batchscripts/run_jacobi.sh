@@ -14,6 +14,11 @@ export OMP_PROC_BIND=spread
 export OMP_PLACES=cores
 export OMP_MAX_TASK_PRIORITY=20
 
+export NANOS6_CONFIG_OVERRIDE="loader.report_prefix=#,numa.tracking=on,version.instrument=none"
+# IF NECESSARY
+# export LD_RUN_PATH="$LD_RUN_PATH:$HOME/package/ompss-2/lib"
+# export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$HOME/package/ompss-2/lib"
+
 for t in 1 2 4 8 16 32 64 128 192; do
   echo "== pf threads=$t"
   OMP_NUM_THREADS=$t ./jacobi_pf --n=${NB} --N=${NX} --nt=100
