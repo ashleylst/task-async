@@ -18,6 +18,10 @@ NX/NY: matrix dimension
 
 nt: time steps
 
+For compilation of `src/jacobi_pf.cpp`
+```
+g++ -O3 --fast-math -march=native -o jacobi_pf jacobi_pf.cpp -fopenmp
+```
 ## 2. Runtime Settings
 
 If necessary, add the paths pointing to the OmpSs-2 installs, like:
