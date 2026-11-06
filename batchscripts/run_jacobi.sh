@@ -21,7 +21,7 @@ export NANOS6_CONFIG_OVERRIDE="loader.report_prefix=#,numa.tracking=on,version.i
 
 for t in 1 2 4 8 16 32 64 128 192; do
   echo "== pf threads=$t"
-  OMP_NUM_THREADS=$t ./jacobi_pf --n=${NB} --N=${NX} --nt=100
+  OMP_NUM_THREADS=$t ./jacobi_pf --N=${NX} --nt=100
 done
 
 unset OMP_NUM_THREADS
